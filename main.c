@@ -207,37 +207,11 @@ int main (int argc,char*argv[]){
                 relationTree->nil=relationDestNil;
                 relationTree->root=relationDestNil;
                 newRelationType->dest=*relationTree;
-                /*newRelationType->myCache=malloc(sizeof(CacheSystem));
-                newRelationType->myCache->maxRelDest=1;
-                newRelationType->myCache->maxDests=malloc(sizeof(CachedEntity));
-                newRelationType->myCache->maxDests->entity=dest;
-                newRelationType->myCache->maxDests->next=NULL;
-                recalculate=FALSE;*/
+                
             }
             RelationDest* newRelation=insertRelation(&newRelationType->dest,dest,sorg, sorgNodeNil);
             newRelation->relationType=newRelationType;
-            /*if (!updateCache && recalculate){
-                if(cacheContains(&newRelationType->myCache->maxDests,dest)==1){
-                    releaseCache(&newRelationType->myCache->maxDests);
-                    newRelationType->myCache->maxDests=malloc(sizeof(CachedEntity));
-                    newRelationType->myCache->maxDests->next=NULL;
-                    newRelationType->myCache->maxDests->entity=dest;
-                    newRelationType->myCache->maxRelDest+=1;
-                    recalculate=FALSE;
-                }else{
-                    recalculate=TRUE;
-                }
-            } else {
-                recalculate=FALSE;
-            }
-
-
-            if(recalculate==TRUE){
-                int result=relationWalk(newRelation, &newRelationType->dest);
-                if (result==newRelationType->myCache->maxRelDest){
-                    insertCachedEntity(&newRelationType->myCache->maxDests,dest);
-                }
-            }*/
+            
         }
         else if(strcmp(command,"delrel")==0) {
             scanf(" \"%s",entSourceRead);
@@ -269,12 +243,7 @@ int main (int argc,char*argv[]){
             if (delRelationType->dest.root==relationDestNil) {
                 deleteRelationType(relationTypeTree, delRelationType);
             }
-            /*} else {
-                if (removeCachedEntity(&delRelationType->myCache->maxDests, dest)) {
-                    if (delRelationType->myCache->maxDests == NULL) {
-                        recalculateMax(delRelationType);
-                    }
-                }*/
+            
         }
         else if(strcmp(command,"report")==0) {
             if (relationTypeTree->root==relationTypeNil){
@@ -523,15 +492,7 @@ void deleteEntity(EntityTree *entityTree, char *name, RelationDest *nil, Relatio
             relationType = relationTypeSuccessor(relationTypeTree, relationType);
             if (prec->dest.nil == prec->dest.root) {
                 deleteRelationType(relationTypeTree, prec);
-            /*} else {
-                if (removeCachedEntity(&prec->myCache->maxDests, delEntity)) {
-                    if (prec->myCache->maxDests == NULL) {
-                        recalculateMax(prec);
-                    }
-                }*/
-            }
-        }
-        //TODO  check also for recalculate.
+            
     }
     Entity *y,*x;
     y=delEntity;
@@ -562,7 +523,6 @@ void deleteEntity(EntityTree *entityTree, char *name, RelationDest *nil, Relatio
     if (y_original_color==BLACK && x!=entityTree->nil){
         deleteEntityFixup(entityTree,x);
     }
-    //free(delEntity->name);
     free(delEntity);
     delEntity=NULL;
 
@@ -1581,41 +1541,6 @@ void recalculateMax(RelationType* relationType){
     RelationDest* nextRelation=relationSuccessor(relationType->dest.nil,actualRelation);
     int max=1;
     int count=1;
-    /*while (actualRelation!=relationType->dest.nil){
-        if(actualRelation->dest==nextRelation->dest){
-            count++;
-        } else {
-            count=1;
-        }
-        if(count==max){
-            insertCachedEntity(&relationType->myCache->maxDests,actualRelation->dest);
-        } else if(count>max){
-            max=count;
-            //if(cacheContains(&relationType->myCache->maxDests,actualRelation->dest)){
-            //} else {
-            if(relationType->myCache->maxDests==NULL){
-                relationType->myCache->maxDests = malloc(sizeof(CachedEntity));
-                relationType->myCache->maxDests->next = NULL;
-                relationType->myCache->maxDests->entity = actualRelation->dest;
-            }
-            else if(relationType->myCache->maxDests->next!=NULL) {
-                releaseCache(&relationType->myCache->maxDests);
-                relationType->myCache->maxDests = malloc(sizeof(CachedEntity));
-                relationType->myCache->maxDests->next = NULL;
-                relationType->myCache->maxDests->entity = actualRelation->dest;
-            } else if(relationType->myCache->maxDests->entity!=actualRelation->dest){
-                releaseCache(&relationType->myCache->maxDests);
-                relationType->myCache->maxDests = malloc(sizeof(CachedEntity));
-                relationType->myCache->maxDests->next = NULL;
-                relationType->myCache->maxDests->entity = actualRelation->dest;
-            }
-            //}
-        }
-        actualRelation=nextRelation;
-        nextRelation=relationSuccessor(relationType->dest.nil,actualRelation);
-
-    }
-    relationType->myCache->maxRelDest=max;*/
 }
 
 void printRelType(RelationType relationType){
@@ -1662,18 +1587,6 @@ void printRelType(RelationType relationType){
     fputc(' ',stdout);
     printf("%d",max);
     fputc(';',stdout);
-    /*CachedEntity* x=relationType.myCache->maxDests;
-    while (x!=NULL){
-        fputs(" \"",stdout);
-        fputs(x->entity->name,stdout);
-        x=x->next;
-    }
-    fputc(' ',stdout);
-    char buffer[10];
-
-    itoa(relationType.myCache->maxRelDest,buffer);
-    fputs(buffer,stdout);
-    fputc(';',stdout);*/
 }
 
 void printReport(RelationTypeTree relationTypeTree){
